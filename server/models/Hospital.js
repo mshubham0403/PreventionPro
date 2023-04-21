@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const hospitalSchema = new Schema({
-  name: String,
+  hospitalName: String,
   hospitalId: String,
 });
 

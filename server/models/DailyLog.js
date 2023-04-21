@@ -5,8 +5,8 @@ const dailyLogSchema = new Schema({
   
   hospitalName:String,
   hospitalId:String,
-  diseasesCases:Number,
-  diseaseName:Number,
+  diseaseCases:Number,
+  diseaseName:String,
   diseaseId:String,
   date:Date,
   user:String,

@@ -2,8 +2,10 @@ import express from "express";
 import mongoose from "mongoose";
 import http from "http";
 
-
 // import router from "./api/routes.js";
+import DailyLogDB from "./models/DailyLog.js";
+import HospitalDB from "./models/Hospital.js";
+import DiseaseDB from "./models/Disease.js";
 
 import path from "path";
 import { fileURLToPath } from "url";
@@ -11,8 +13,15 @@ import cors from "cors";
 import { userInfo } from "os";
 
 await mongoose.connect(
-  "mongodb+srv://mshubham:healthcare2023@clusterh.ilp8ion.mongodb.net/?retryWrites=true&w=majority" );
-
+  "mongodb+srv://mshubham:healthcare2023@clusterh.ilp8ion.mongodb.net/?retryWrites=true&w=majority"
+);
+if (
+  mongoose.connect(
+    "mongodb+srv://mshubham:healthcare2023@clusterh.ilp8ion.mongodb.net/?retryWrites=true&w=majority"
+  )
+) {
+  console.log("connected to mongoose");
+}
 const app = express();
 const httpserver = http.createServer(app);
 // const io = new Server(httpserver, { cors: ["*"] });
@@ -25,50 +34,55 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + "/index.html");
 });
 
-
-
 app.use(express.json());
 app.use(cors());
 
-const Diseases = ["ulcer", "piles","constipation"]
-const Hospitals = [{ hospitalName: "hos1",hospitalId: "dcw2" },{ hospitalName: "hos2 1",hospitalId: "de2" }];
+const Diseases = ["ulcer", "piles", "constipation"];
+const Hospitals = [
+  { hospitalName: "hos1", hospitalId: "dcw2" },
+  { hospitalName: "hos2 1", hospitalId: "de2" },
+];
 //GET---------------------------------------------------------------->>>>>>>>>=>>>>>>>>>
 
 app.get("/hospitals", async (req, res) => {
-  
-  res.json( Hospitals );
+  const hosps = await HospitalDB.find();
+
+  res.json(hosps);
 });
 app.get("/diseases", async (req, res) => {
-  
-  res.json(Diseases) ;
+  const Diseaselist = await DiseaseDB.find();
+  res.json(Diseases);
+  // res.json(Diseaselist);
+});
+app.get("/dailylog", async (req, res) => {
+  const dailyLoglist = await DailyLogDB.find();
+
+  res.json(dailyLoglist);
 });
 
-
 //POST---------------------------------------------------------------->>>>>>>>>=>>>>>>>>>
-
-
-
 
 //Add hospitals---------------------------------------------------------------->>>>>>>>>=>>>>>>>>>
 
 app.post("/hospitals", async (req, res) => {
-  console.log("request reached",req.hospitalName);
-  const chkobj = Hospitals.find((hos)=>(hos.hospitalName===req.body.hospitalName))
+  console.log("request reached", req.body.hospitalName);
+  const chkobj = await HospitalDB.find({
+    hospitalName: req.body.hospitalName,
+  }).count();
 
-  if (chkobj != null) {
+  if (chkobj != 0) {
     res.status(201).send("hosp is in list");
   } else {
     try {
-     
-
       const hosp = {
         hospitalName: req.body.hospitalName,
-  
-        hospitalId:req.body.hospitalId,
+
+        hospitalId: req.body.hospitalId,
       };
-Hospitals.push(hosp);
-      res.status(201).send(hosp);
-      console.log("hosp added")
+      const hospObj = new HospitalDB(hosp);
+      await hospObj.save();
+      res.status(201).send("hospital added ,name :");
+      console.log("hosp added");
     } catch {
       res.status(500).send("error occurred");
       console.log("hosp error");
@@ -81,34 +95,32 @@ Hospitals.push(hosp);
 app.post("/dailylog", async (req, res) => {
   console.log("reqest for adding log reachd the server");
 
-  
+  try {
+    const logToday = req.body;
 
-  
-    try {
-      const logToday = {hospitalName:req.body.hospitalName,hospitalId:req.body.hospitalId,arrDiseasesCases:req.body.arrDiseasesCases,date:req.body.date,user:req.body.user};
-     
-      console.log("log to be added",logToday)
-      const allEntries =[]
-      logToday.arrDiseasesCases.map((disease)=>{
-       const eachDiseaseEntry = {diseaseName:disease.disease, diseaseId:disease.diseaseId,hospitalName:logToday.hospitalName,
-      hospitalId:logToday.hospitalId,
-      dateAdded:disease.dateAdded,
-      user:disease.userThatAdded}
+    console.log("log to be added", logToday);
+
+    logToday.arrDiseasesCases.map((disease) => {
+      const eachDiseaseEntry = {
+        diseaseName: disease.disease,
+        diseaseId: disease.diseaseId,
+        diseaseCases:disease.cases,
+        hospitalName: logToday.hospitalName,
+        hospitalId: logToday.hospitalId,
+        date: disease.dateAdded,
+        user: disease.userThatAdded,
+      };
+      const dailylogEntry = new DailyLogDB(eachDiseaseEntry);
+      dailylogEntry.save();
+    });
+    res.status(200).send("the daily entry is added");
+
     
-    allEntries.push(eachDiseaseEntry);
-  })
-  res.status(200).send("daily log added")
-  console.log("the entries created",allEntries)
-      console.log("logday added", logToday);
-    }
-    catch {
-      res.status(500).send("error occurred")
-      console.log("logging error");
-    }
-  
+  } catch {
+    res.status(500).send("error occurred");
+    console.log("log addition error");
+  }
 });
-
-
 
 httpserver.listen(PORT, function () {
   console.log("The server is up and running at", PORT, ":)");
