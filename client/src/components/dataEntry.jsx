@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Hospital from "../../../server/models/Hospital.js";
 import HospitalSelect from "./HospitalSelect.jsx";
+import { v4 as uuidv4 } from "uuid";
 
 export default function DataEntry({ urlD }) {
   const [selectedHospital, setSelectedHospital] = useState("");
@@ -9,8 +10,10 @@ export default function DataEntry({ urlD }) {
   const [entries, setEntries] = useState([
     { disease: "", cases: 0, diseaseId: "", dateAdded: "", userThatAdded: "" },
   ]);
-
-  const [diseases, setDiseases] = useState(["Paralysis", "Aids", "Alzheimer"]);
+  const [showDataEntryForm, setShowDataEntryForm] = useState(true);
+  const [showNewDiseaseForm, setShowNewDiseaseForm] = useState(false);
+  const [newDiseaseName, setNewDiseaseName] = useState("");
+  const [diseases, setDiseases] = useState([{}]);
 
   async function fetchDisease() {
     await axios.get(urlD + "/diseases").then((res) => {
@@ -40,12 +43,17 @@ export default function DataEntry({ urlD }) {
   };
 
   const handleDiseaseChange = (index, value) => {
-    const newEntries = [...entries];
-    newEntries[index].disease = value;
-    newEntries[index].dateAdded = selectedDate;
-    newEntries[index].diseaseId = "";
-    newEntries[index].userThatAdded = "";
-    setEntries((prev) => newEntries);
+    if (value === "newd") {
+      setShowDataEntryForm((prev) => false);
+      setShowNewDiseaseForm((prev) => true);
+    } else {
+      const newEntries = [...entries];
+      newEntries[index].disease = value;
+      newEntries[index].dateAdded = selectedDate;
+      newEntries[index].diseaseId = "";
+      newEntries[index].userThatAdded = "";
+      setEntries((prev) => newEntries);
+    }
   };
 
   const handleCasesChange = (index, value) => {
@@ -64,28 +72,30 @@ export default function DataEntry({ urlD }) {
       user: "",
     };
 
+    
+    
+
     // submitting the form data to the server=======================================================================================================================================
 
-   try{ await axios.post(urlD + "/dailylog", diseaseData).then((res) => {
-      console.log(res.data);
-    });
-  }
-  catch(e){
-console.log(e);
-  }
-  finally{
-    setEntries((prevEnt) => [
-      { disease: "", cases: 0, diseaseId: "", dateAdded: "" },
-    ]);
+    try {
+      await axios.post(urlD + "/dailylog", diseaseData).then((res) => {
+        console.log(res.data);
+      });
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setEntries((prevEnt) => [
+        { disease: "", cases: 0, diseaseId: "", dateAdded: "" },
+      ]);
 
-    console.log("object sent ", diseaseData, "the entries", entries);
-  }
-};
+      console.log("object sent ", diseaseData, "the entries", entries);
+    }
+  };
 
   return (
     <div>
       <HospitalSelect onChange={handleHospitalChange} urlH={urlD} />
-      {selectedHospital && (
+      {selectedHospital && showDataEntryForm && (
         <div>
           <h4 className="text-center mt-3">
             Selected Hospital: {selectedHospital.hospitalName} with :
@@ -116,11 +126,14 @@ console.log(e);
                     required
                   >
                     <option value="">Select a disease</option>
-                    {diseases.map((disease, indexDis) => (
-                      <option key={indexDis} value={disease}>
-                        {disease}
-                      </option>
-                    ))}
+                    {diseases.map((dis) => (
+            <option id ={dis.diseaseId} value={dis.diseaseName} key={dis.diseaseId}>
+              {dis.diseaseName}
+            </option>
+          ))}
+                    <option key={"new"} value={"newd"}>
+                      Add new
+                    </option>
                   </select>
                 </label>
                 <label className="col-sm-6">
@@ -161,6 +174,53 @@ console.log(e);
           </form>
         </div>
       )}
+      {
+        showNewDiseaseForm && (
+        <div className="mt-2">
+          <form>
+            <div className="input-group">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Enter new hospital name"
+                value={newDiseaseName}
+                onChange={function handleNewDiseaseNameChange(e){
+                  setNewDiseaseName(e.target.value);
+                }}
+                required
+              />
+              <button
+                className="btn btn-primary"
+                type="submit"
+                onClick={async function handleAddDisease(e) {
+                  e.preventDefault();
+                  try {
+                    const diseaseIdGen = uuidv4();
+                    const response = await axios.post(urlD + "/diseases", {
+                      diseaseName: newDiseaseName,
+                      diseaseId: diseaseIdGen,
+                    });
+              
+                    console.log(response.data);
+                    setShowNewDiseaseForm(false);
+                    setShowDataEntryForm(true);
+                
+                    setNewDiseaseName("");
+            
+                    fetchDisease();
+                  } catch (e) {
+                    console.log("error", e);
+                  }
+                }
+            }
+              >
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
+        )
+      }
     </div>
   );
 }

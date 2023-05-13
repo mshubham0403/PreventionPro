@@ -37,11 +37,11 @@ app.get("/", function (req, res) {
 app.use(express.json());
 app.use(cors());
 
-const Diseases = ["ulcer", "piles", "constipation"];
-const Hospitals = [
-  { hospitalName: "hos1", hospitalId: "dcw2" },
-  { hospitalName: "hos2 1", hospitalId: "de2" },
-];
+// const Diseases = ["ulcer", "piles", "constipation"];
+// const Hospitals = [
+//   { hospitalName: "hos1", hospitalId: "dcw2" },
+//   { hospitalName: "hos2 1", hospitalId: "de2" },
+// ];
 //GET---------------------------------------------------------------->>>>>>>>>=>>>>>>>>>
 
 app.get("/hospitals", async (req, res) => {
@@ -51,8 +51,8 @@ app.get("/hospitals", async (req, res) => {
 });
 app.get("/diseases", async (req, res) => {
   const Diseaselist = await DiseaseDB.find();
-  res.json(Diseases);
-  // res.json(Diseaselist);
+  // res.json(Diseases);
+  res.json(Diseaselist);
 });
 app.get("/dailylog", async (req, res) => {
   const dailyLoglist = await DailyLogDB.find();
@@ -89,8 +89,35 @@ app.post("/hospitals", async (req, res) => {
     }
   }
 });
+//Disease=======================>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+app.post("/diseases", async (req, res) => {
+  console.log("request reached", req.body.diseaseName);
+  const chkobj = await DiseaseDB.find({
+    diseaseName: req.body.diseaseName,
+  }).count();
+
+  if (chkobj != 0) {
+    res.status(201).send("disease already exists");
+  } else {
+    try {
+      const disp= {
+        diseaseName: req.body.diseaseName,
+
+        diseaseId: req.body.diseaseId,
+      };
+      const dispObj = new DiseaseDB(disp);
+      await dispObj.save();
+      res.status(201).send(disp);
+      console.log("disp added");
+    } catch {
+      res.status(500).send("error occurred");
+      console.log("disp error");
+    }
+  }
+});
 
 //Daily logs=======================>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 
 app.post("/dailylog", async (req, res) => {
   console.log("reqest for adding log reachd the server");

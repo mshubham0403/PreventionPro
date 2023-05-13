@@ -8,7 +8,7 @@ export default function Hospitalbar({ onChange, urlH }) {
   const [showAddForm, setShowAddForm] = useState(false);
   const [newHospitalName, setNewHospitalName] = useState("");
 
-  const [arrHos, setArrHos] = useState([{ name: "r1", hospitalId: "12qwer" }]);
+  const [arrHos, setArrHos] = useState([{ hospitalname: "r1", hospitalId: "12qwer" }]);
 
   async function getHosList() {
     await axios.get(urlH + "/hospitals").then((res) => {
@@ -24,7 +24,7 @@ export default function Hospitalbar({ onChange, urlH }) {
   const handleSelect = (e) => {
     const selectedValue = e.target.value;
     const selectedId= e.target.options[e.target.selectedIndex].id; ;
-    // console.log("reality",selectedValue,"id",selectedId,e.target);
+   
     setSelectedHospital(prev=>({hospitalName:selectedValue,hospitalId:selectedId}));
     if (selectedValue === "add") {
       setShowAddForm(true);

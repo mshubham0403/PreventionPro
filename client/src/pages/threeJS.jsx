@@ -61,7 +61,7 @@ function HeatMap(props) {
     return month.diseases.slice(0, 3).map((disease, diseaseIndex) => {
       const diseaseName = disease.name;
       const diseaseCases = disease.cases;
-      const scaleValue = (diseaseCases / maxCases) * 5;
+      const scaleValue = (diseaseCases / maxCases) ;
       const scale = [1, scaleValue * 5, 1];
       const colorIndex = Math.round(scaleValue * (colors.length - 1));
       const color = colors[colorIndex];
@@ -197,12 +197,21 @@ const  [selected,setSelected] = useState({month:"Click a Block!",cases:0,disease
   ];
 
   const colors = [
-    "#006400",
-    "#2E8B57",
-    "#008000",
-    "#9ACD32",
-    "#FFA500",
-    "#FF0000",
+    "#006400", // Dark Green
+  "#008000", // Green
+  "#228B22", // Forest Green
+  "#2E8B57", // Sea Green
+  "#3CB371", // Medium Sea Green
+  "#32CD32", // Lime Green
+  "#00FF00", // Lime
+  "#7FFF00", // Chartreuse
+  "#ADFF2F", // Green Yellow
+  "#FFFF00", // Yellow
+  "#FFD700", // Gold
+  "#FFA500", // Orange
+  "#FF4500", // Orange Red
+  "#FF0000", // Red
+  "#800000"  // Maroon
   ];
   return (
     <div
@@ -258,6 +267,7 @@ const  [selected,setSelected] = useState({month:"Click a Block!",cases:0,disease
                 {selected.cases}
             </div>
         </div>
+       
     </div>
     </div>
 );

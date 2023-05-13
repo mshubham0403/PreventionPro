@@ -10,9 +10,9 @@ export default function Home() {
         {/* 1 */}
         <div className="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light mains">
           <div className="col-md-6 p-xl-5 mx-auto my-5 heading intro">
-            <h1 className="display-4 fw-normal">Healthcare App</h1>
+            <h1 className="display-4 fw-normal">Prevention Pro</h1>
             <p className="lead fw-normal">
-              A project to make your life easier.
+              A project to Safe-Guard you against possible Viral outbreaks.
             </p>
           </div>
           <div className="product-device shadow-sm d-none d-md-block"></div>
@@ -174,7 +174,7 @@ export default function Home() {
             <i className="fa-solid fa-laptop-medical fa-3x"></i>
             <div className="d-block mb-3 text-muted">
               &copy; 2023
-              <br /> HealthCare App
+              <br /> Presvention Pro
             </div>
           </div>
 

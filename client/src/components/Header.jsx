@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 <>
 <header className="site-header sticky-top py-1">
   <nav className="container d-flex flex-column flex-md-row justify-content-between">
-  <Link to="/home" >
+  <Link to="/" >
     <button>
         Home
         </button>
