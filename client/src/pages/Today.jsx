@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useOutletContext } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 export default function Today() {
   const [selectedDate, setSelectedDate] = useState("");
@@ -93,7 +95,8 @@ export default function Today() {
   }, [selectedDate]);
 
   return (
-    <div className="container">
+    <div className="container" style={{ background: 'linear-gradient(to bottom right, #7ad1f5, #b1e2ff)' }}>
+     
     <h2 className="mt-4">Select a Date:</h2>
     <form onSubmit={handleSubmit} className="mb-4">
       <div className="row">
@@ -116,10 +119,13 @@ export default function Today() {
 
     {data.length > 0 && (
         <div>
-                    <h2>Total Patients: {getTotalPatients()}</h2>
-          <h2>Disease with Maximum Cases: {getDiseaseWithMaxCases().disease}</h2>
-
-          <div className="my-4">
+        <div className="bg-light p-3 mb-4">
+          <h2 className="mb-0">Total Patients: <span className="text-primary">{getTotalPatients()}</span></h2>
+        </div>
+        <div className="bg-light p-3 mb-4">
+          <h2 className="mb-0">Disease with Maximum Cases: <span className="text-primary">{getDiseaseWithMaxCases().disease}</span></h2>
+        </div>
+         <div className="my-4">
             <button
               type="button"
               className="btn btn-primary me-2"

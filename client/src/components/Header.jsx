@@ -5,8 +5,11 @@ import { Link } from "react-router-dom";
 
 
 
- function Header() {
-
+ function Header({log,setLog}) {
+console.log(log);
+function logout(){
+  setLog(prev=>false);
+}
   return (
 <>
 <header className="site-header sticky-top py-1">
@@ -37,6 +40,11 @@ import { Link } from "react-router-dom";
         </button>
       
       </Link>
+      {log &&
+      <button onClick={logout}>
+        Logout
+        </button>
+ }
   </nav>
 </header>
 

@@ -1,17 +1,20 @@
 import express from "express";
 import mongoose from "mongoose";
 import http from "http";
+import bcrypt from "bcrypt";
 
+
+// import {} from "../server/preProcess/fetchGatherData.js";
 // import router from "./api/routes.js";
 import DailyLogDB from "./models/DailyLog.js";
 import HospitalDB from "./models/Hospital.js";
 import DiseaseDB from "./models/Disease.js";
-
+import UserDb from "./models/User.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import cors from "cors";
 import { userInfo } from "os";
-import { log } from "console";
+import { log, time } from "console";
 
 await mongoose.connect(
   "mongodb+srv://mshubham:healthcare2023@clusterh.ilp8ion.mongodb.net/?retryWrites=true&w=majority"
@@ -23,13 +26,15 @@ if (
 ) {
   console.log("connected to mongoose");
 }
+
 const app = express();
 const httpserver = http.createServer(app);
-// const io = new Server(httpserver, { cors: ["*"] });
+
 const PORT = process.env.PORT || 7153;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 
 app.get("/", function (req, res) {
   res.sendFile(__dirname + "/index.html");
@@ -44,7 +49,10 @@ app.use(cors());
 //   { hospitalName: "hos2 1", hospitalId: "de2" },
 // ];
 //GET---------------------------------------------------------------->>>>>>>>>=>>>>>>>>>
-
+app.get("/users", async (req, res) => {
+  const userArr = await UserDb.find();
+  res.json( userArr );
+});
 app.get("/hospitals", async (req, res) => {
   const hosps = await HospitalDB.find();
 
@@ -61,7 +69,74 @@ app.get("/dailylog", async (req, res) => {
   res.json(dailyLoglist);
 });
 
+// app.get("/addhos", async (req, res) => {
+//   addHospitals();
+//   res.json("done");
+// });
+// app.get("/adddis", async (req, res) => {
+//   addDisease();
+//   res.json("done");
+// });
+// app.get("/addlogs", async (req, res) => {
+//   await saveRecords();
+//   res.json("adding records");
+// });
 //POST---------------------------------------------------------------->>>>>>>>>=>>>>>>>>>
+
+// Login->>>>>>>------------------------------------------------------------>>>>>>>>>>>>>>>>>>>
+app.post("/users/login", async (req, res) => {
+  console.log("request sign in");
+  const userchk= await UserDb.find({ name: req.body.name }).count();
+  const user= await UserDb.find({ name: req.body.name });
+  // console.log(user[0]);
+
+  if (userchk == 0) {
+    res.status(400).send("Cannot find user");
+  } 
+  else {
+    try {
+      if (await bcrypt.compare(req.body.password,user[0].password )) {
+        const sentDtaConfirm = {
+          userIdSentServer: user[0].userId,
+          userNameSentServer: user[0].name,
+          status: "Success",
+        };
+        res.send(sentDtaConfirm);
+      } else {
+        res.send("User exists password incorrect");
+      }
+    } catch {
+      res.status(500).send("error");
+    }
+  }
+});
+//Signup---------------------------------------------------------------->>>>>>>>>=>>>>>>>>>
+
+app.post("/users", async (req, res) => {
+  const chkUser = await UserDb.find({ name: req.body.name }).count();
+
+  if (chkUser != 0) {
+    res.status(201).send("user already added");
+  } else {
+    try {
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+      const user = {
+        name: req.body.name,
+        password: hashedPassword,
+        userId: req.body.userId,
+      };
+
+      const userDbObj = new UserDb(user);
+      userDbObj.save();
+      res.status(201).send("user added");
+      console.log("user added", user);
+    } catch {
+      res.status(500).send("error occurred");
+      console.log("user error");
+    }
+  }
+});
 
 //Add hospitals---------------------------------------------------------------->>>>>>>>>=>>>>>>>>>
 
