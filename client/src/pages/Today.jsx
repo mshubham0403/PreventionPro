@@ -6,6 +6,7 @@ export default function Today() {
   const [selectedDate, setSelectedDate] = useState("");
   const [data, setData] = useState([]);
   const { ServerUrl } = useOutletContext();
+  const [displayOption, setDisplayOption] = useState("hospital");
 
   const handleDateChange = (event) => {
     setSelectedDate(event.target.value);
@@ -82,7 +83,9 @@ export default function Today() {
 
     return diseasesByMaxCases;
   };
-
+  const handleDisplayOptionChange = (option) => {
+    setDisplayOption(prev=>option);
+  };
   useEffect(() => {
     if (selectedDate !== "") {
       handleSubmit(new Event("submit"));
@@ -103,9 +106,9 @@ export default function Today() {
           />
         </div>
         <div className="col-md-2">
-          <button type="submit" className="btn btn-primary">
+          {/* <button type="submit" className="btn btn-primary">
             Submit
-          </button>
+          </button> */}
         </div>
       </div>
     </form>
@@ -113,44 +116,63 @@ export default function Today() {
 
     {data.length > 0 && (
         <div>
-          <h2 className="mt-4">Total Patients Today: {getTotalPatients()}</h2>
+                    <h2>Total Patients: {getTotalPatients()}</h2>
           <h2>Disease with Maximum Cases: {getDiseaseWithMaxCases().disease}</h2>
 
-          <div className="mt-4">
-            <h2>Diseases by Hospital:</h2>
-            {Object.entries(getDiseasesByHospital()).map(([hospitalName, diseases]) => (
-              <div key={hospitalName} className="card mb-3">
-                <div className="card-header">
-                  <h3>{hospitalName}</h3>
-                </div>
-                <ul className="list-group list-group-flush">
-                  {Object.entries(diseases).map(([diseaseName, cases]) => (
-                    <li key={diseaseName} className="list-group-item">
-                      {diseaseName}: {cases} cases
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+          <div className="my-4">
+            <button
+              type="button"
+              className="btn btn-primary me-2"
+              onClick={() => handleDisplayOptionChange("hospital")}
+            >
+              Hospitals
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => handleDisplayOptionChange("disease")}
+            >
+              Diseases
+            </button>
           </div>
 
-          <div className="mt-4">
-            <h2>Diseases by Max Cases:</h2>
-            {Object.entries(getDiseasesByMaxCases()).map(([diseaseName, cases]) => (
-              <div key={diseaseName} className="card mb-3">
-                <div className="card-header">
-                  <h3>{diseaseName}</h3>
+          {displayOption === "hospital" ? (
+            <div>
+              <h2>Diseases by Hospital:</h2>
+              {Object.entries(getDiseasesByHospital()).map(([hospitalName, diseases]) => (
+                <div key={hospitalName} className="card mb-4">
+                  <div className="card-header">{hospitalName}</div>
+                  <div className="card-body">
+                    <ul>
+                      {Object.entries(diseases).map(([diseaseName, cases]) => (
+                        <li key={diseaseName}>
+                          {diseaseName}: {cases} cases
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-                <ul className="list-group list-group-flush">
-                  {Object.entries(getDiseasesByHospital()).map(([hospitalName, diseases]) => (
-                    <li key={hospitalName} className="list-group-item">
-                      {hospitalName}: {diseases[diseaseName] ? diseases[diseaseName] : 0} cases
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div>
+              <h2>Diseases by Max Cases:</h2>
+              {Object.entries(getDiseasesByMaxCases()).map(([diseaseName, cases]) => (
+                <div key={diseaseName} className="card mb-4">
+                  <div className="card-header">{diseaseName}</div>
+                  <div className="card-body">
+                    <ul>
+                      {Object.entries(getDiseasesByHospital()).map(([hospitalName, diseases]) => (
+                        <li key={hospitalName}>
+                          {hospitalName}: {diseases[diseaseName] ? diseases[diseaseName] : 0} cases
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>

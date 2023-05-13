@@ -178,9 +178,7 @@ const searchDate = new Date(`${parts[2]}-${parts[1]}-${parts[0]}T00:00:00.000+00
   }
 });
 
-// look at the code below and give me code acc to my instruction based on the given code -:
-// instructions-:
-// write code for jsx element that fetches todays data from db by communicating with seerver via axios 
+
 
 httpserver.listen(PORT, function () {
   console.log("The server is up and running at", PORT, ":)");
