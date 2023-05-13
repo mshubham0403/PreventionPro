@@ -11,6 +11,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import cors from "cors";
 import { userInfo } from "os";
+import { log } from "console";
 
 await mongoose.connect(
   "mongodb+srv://mshubham:healthcare2023@clusterh.ilp8ion.mongodb.net/?retryWrites=true&w=majority"
@@ -148,6 +149,38 @@ app.post("/dailylog", async (req, res) => {
     console.log("log addition error");
   }
 });
+
+//get Today=======================>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+app.post("/today", async (req, res) => {
+  const  date  = req.body.date;
+ 
+
+  try { console.log(date);
+    // Parse the date string to a Date object
+    const inputDate = date;
+const parts = inputDate.split("/");
+const searchDate = new Date(`${parts[2]}-${parts[1]}-${parts[0]}T00:00:00.000+00:00`).toISOString();
+
+
+    console.log(searchDate);
+
+    // Extract diseases with their information for the given date
+    const diseases = await DailyLogDB.find({ date: searchDate }).select(
+      "diseaseName diseaseId hospitalName hospitalId"
+    );
+     console.log(diseases);
+     res.json(diseases);
+  
+ } catch (error) {
+    console.error("Error fetching diseases:", error);
+    res.status(500).json({ error: "An error occurred" });
+  }
+});
+
+// look at the code below and give me code acc to my instruction based on the given code -:
+// instructions-:
+// write code for jsx element that fetches todays data from db by communicating with seerver via axios 
 
 httpserver.listen(PORT, function () {
   console.log("The server is up and running at", PORT, ":)");
