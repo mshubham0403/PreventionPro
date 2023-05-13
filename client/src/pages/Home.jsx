@@ -146,7 +146,7 @@ export default function Home() {
             </div>
             <div className="member m1 col-4">
               <img src="images/boy (4).png" alt="mem-1" />
-              <h4 className="text-light">xyx</h4>
+              <h4 className="text-light">Devesh Charan</h4>
             </div>
             <div className="col-2"></div>
           </div>
