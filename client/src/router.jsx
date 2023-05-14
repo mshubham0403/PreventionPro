@@ -5,7 +5,7 @@ import Heatmap from "./pages/threeJS.jsx";
 import Today from "./pages/Today.jsx";
 import Insert from "./pages/Insert.jsx";
 import Three from "./pages/threeJS";
-import PredictionPage from "./pages/Prediction.jsx";
+import PredictionPage from "./pages/prediction.jsx";
 
 const router = createBrowserRouter([
   {
