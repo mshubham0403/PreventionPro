@@ -2,7 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import http from "http";
 import bcrypt from "bcrypt";
-
+import predict from "./Ananlysis/prediction.js";
 
 // import {} from "../server/preProcess/fetchGatherData.js";
 // import router from "./api/routes.js";
@@ -253,7 +253,26 @@ const searchDate = new Date(`${parts[2]}-${parts[1]}-${parts[0]}T00:00:00.000+00
   }
 });
 
+app.get("/prediction/:month", async (req, res) => {
+  const { month } = req.params;
+  try {
+    if (isNaN(month)) {
+      throw new Error("Month is not a number");
+    }
+    const monthNumber = parseInt(month);
 
+    // Get top 10 disease predictions
+    const prediction = await predict(monthNumber);
+    setTimeout(() => {
+      return res.json({ data: prediction }); 
+    },1000);
+
+    
+  } catch (err) {
+    console.log(err);
+    return res.json({ message: "error" });
+  }
+});
 
 httpserver.listen(PORT, function () {
   console.log("The server is up and running at", PORT, ":)");

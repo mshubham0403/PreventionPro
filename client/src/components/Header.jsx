@@ -40,6 +40,10 @@ function logout(){
         </button>
       
       </Link>
+      
+      <Link to="/prediction">
+            <button>Prediction</button>
+          </Link>
       {log &&
       <button onClick={logout}>
         Logout

@@ -5,6 +5,7 @@ import Heatmap from "./pages/threeJS.jsx";
 import Today from "./pages/Today.jsx";
 import Insert from "./pages/Insert.jsx";
 import Three from "./pages/threeJS";
+import PredictionPage from "./pages/Prediction.jsx";
 
 const router = createBrowserRouter([
   {
@@ -15,25 +16,28 @@ const router = createBrowserRouter([
         path: "/",
         element: <Home />,
       },
-    
+
       {
         path: "/heatmap",
-        element: < Heatmap/>,
+        element: <Heatmap />,
       },
-      
+
       {
         path: "/today",
-        element: < Today/>,
+        element: <Today />,
       },
       {
         path: "/insert",
-        element: < Insert/>,
+        element: <Insert />,
       },
       {
         path: "/three",
-        element: < Three/>,
+        element: <Three />,
       },
-    
+      {
+        path: "/prediction",
+        element: <PredictionPage />,
+      },
     ],
   },
 ]);
