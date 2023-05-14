@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import Hospital from "../../../server/models/Hospital.js";
+
 import HospitalSelect from "./HospitalSelect.jsx";
 import { v4 as uuidv4 } from "uuid";
 

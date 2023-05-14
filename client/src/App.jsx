@@ -8,7 +8,10 @@ import { useState } from "react";
 
 function App() {
  
-const ServerUrl= "http://localhost:7153";
+const ServerUrl= 
+process.env.NODE_ENV === "production"
+  ? "https://preventionpro.onrender.com/"
+  : "http://localhost:7153";
 const [isLoggedIn, setIsLoggedIn] = useState(false); 
 
   return (
