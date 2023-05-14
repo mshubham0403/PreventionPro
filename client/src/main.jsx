@@ -7,6 +7,6 @@ import router from "./router.jsx";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
  
-root.render(<RouterProvider  basename={process.env.REACT_APP_URI} router={router}/>);
+root.render(<RouterProvider  basename={"production"} router={router}/>);
 
 
