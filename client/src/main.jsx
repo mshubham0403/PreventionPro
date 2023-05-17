@@ -9,7 +9,4 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
  
 root.render(<RouterProvider  basename={"production"} router={router}/>);
 
-ReactDOM.render(
-    <RouterProvider  basename={"production"} router={router}/>,
-    root
-  );
+
