@@ -15,37 +15,37 @@ function logout(){
 <header className="site-header sticky-top py-1">
   <nav className="container d-flex flex-column flex-md-row justify-content-between">
   <Link to="/" >
-    <button>
+  <button type="button" class="btn btn-dark" data-toggle="button" aria-pressed="false" autocomplete="off">
         Home
         </button>
       </Link>
       <Link to="/heatmap" >
       
-      <button>
+      <button type="button" class="btn btn-dark" data-toggle="button" aria-pressed="false" autocomplete="off">
         Heatmap
         </button>
       
       </Link>
       <Link to="/insert" >
       
-      <button>
+      <button type="button" class="btn btn-dark" data-toggle="button" aria-pressed="false" autocomplete="off">
         Insert
         </button>
       
       </Link>
       <Link to="/today" >
       
-      <button>
+      <button type="button" class="btn btn-dark" data-toggle="button" aria-pressed="false" autocomplete="off">
         Today
         </button>
       
       </Link>
       
       <Link to="/prediction">
-            <button>Prediction</button>
+            <button type="button" class="btn btn-dark" data-toggle="button" aria-pressed="false" autocomplete="off">Prediction</button>
           </Link>
       {log &&
-      <button onClick={logout}>
+      <button type="button" class="btn btn-dark" data-toggle="button" aria-pressed="false" autocomplete="off" onClick={logout}>
         Logout
         </button>
  }
