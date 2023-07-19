@@ -6,7 +6,8 @@ import router from "./router.jsx";
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+ console.log("main working")
  
-root.render(<RouterProvider  basename={"/home"} router={router}/>);
+root.render(<RouterProvider  basename={"/"} router={router}/>);
 
 
