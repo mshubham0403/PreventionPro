@@ -1,0 +1,16 @@
+{
+    "name": "Prevention_Pro",
+    "short_name": "PPro",
+    "start_url": "./main.jsx",
+    "display": "standalone",
+    "background_color": "#222222",
+    "theme_color": "#333333",
+    "icons": [
+      {
+        "src": "favicon-small.png",
+       
+        "type": "image/png"
+      }
+    ]
+  }
+  
