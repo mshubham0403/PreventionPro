@@ -10,7 +10,7 @@ function App() {
  
 const ServerUrl= 
 process.env.NODE_ENV === "production"
-  ? "https://preventionpro.onrender.com/"
+  ? "https://preventionpro.onrender.com"
   : "http://localhost:7153";
 const [isLoggedIn, setIsLoggedIn] = useState(false); 
 
