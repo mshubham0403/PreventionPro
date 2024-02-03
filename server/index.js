@@ -17,7 +17,7 @@ import { userInfo } from "os";
 import { log, time } from "console";
 
 await mongoose.connect(
-  "mongodb+srv://mshubham:healthcare2023@clusterh.ilp8ion.mongodb.net/?retryWrites=true&w=majority"
+  `mongodb+srv://mshubham:${process.env.MONGO_PASS}@clusterh.ilp8ion.mongodb.net/?retryWrites=true&w=majority`
 );
 if (
   mongoose.connect(
