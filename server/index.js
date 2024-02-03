@@ -15,17 +15,19 @@ import { fileURLToPath } from "url";
 import cors from "cors";
 import { userInfo } from "os";
 import { log, time } from "console";
+import dotenv from 'dotenv';
+dotenv.config();
 
-await mongoose.connect(
-  `mongodb+srv://mshubham:${process.env.MONGO_PASS}@clusterh.ilp8ion.mongodb.net/?retryWrites=true&w=majority`
-);
-if (
-  mongoose.connect(
-    "mongodb+srv://mshubham:healthcare2023@clusterh.ilp8ion.mongodb.net/?retryWrites=true&w=majority"
-  )
-) {
-  console.log("connected to mongoose");
-}
+
+const uri = `mongodb+srv://mshubham:${process.env.MONGO_PASS}@clusterh.ilp8ion.mongodb.net/?retryWrites=true&w=majority`;
+
+try{
+  await mongoose.connect(uri); 
+  
+  console.log("Pinged your deployment. You successfully connected to MongoDB!");
+ }catch(e){
+  console.log("could not connect mongodb because ",e);
+ }
 
 const app = express();
 const httpserver = http.createServer(app);
